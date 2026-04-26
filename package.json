@@ -1,0 +1,23 @@
+{
+  "name": "zukko-avlod",
+  "version": "1.0.0",
+  "description": "`Zukko Avlod` maktab olimpiadalari uchun yaratilgan full-stack platforma. Loyiha PowerShell backend, vanilla frontend va JSON asosli yengil ma'lumotlar bazasi bilan ishlaydi.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Khamidyobuna/Zukko-Avlod.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Khamidyobuna/Zukko-Avlod/issues"
+  },
+  "homepage": "https://github.com/Khamidyobuna/Zukko-Avlod#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
