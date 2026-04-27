@@ -947,19 +947,19 @@ function resultMarkup(result) {
       <h3>${escapeHtml(question.text)}</h3>
       <div class="options-grid">
         ${question.options.map((option, index) => {
-          const classes = [
-            "option",
-            index === question.correctIndex ? "correct" : "",
-            index === question.selectedIndex && index !== question.correctIndex ? "wrong" : "",
-            index === question.selectedIndex ? "selected" : "",
-          ].filter(Boolean).join(" ");
-          return `
+    const classes = [
+      "option",
+      index === question.correctIndex ? "correct" : "",
+      index === question.selectedIndex && index !== question.correctIndex ? "wrong" : "",
+      index === question.selectedIndex ? "selected" : "",
+    ].filter(Boolean).join(" ");
+    return `
             <div class="${classes}">
               <strong>${String.fromCharCode(65 + index)}</strong>
               <span>${escapeHtml(option)}</span>
             </div>
           `;
-        }).join("")}
+  }).join("")}
       </div>
     </article>
   `).join("");
@@ -1196,16 +1196,26 @@ function attachJumpButtons() {
 function attachRegisterForm() {
   const form = document.getElementById("register-form");
   if (!form) return;
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = new FormData(form);
     const payload = Object.fromEntries(data.entries());
 
     try {
+      // Backend ga so'rov yuborish
       const response = await api("/api/auth/register", { method: "POST", body: payload });
-      await loadContext();
+
+      // MUHIM: User ma'lumotini localStorage ga saqlash
+      if (response.user) {
+        localStorage.setItem('zukko_user', JSON.stringify(response.user));
+        localStorage.setItem('zukko_student_code', response.user.studentCode);
+      }
+
       showToast(`${t("registered_ok")} ${t("student_id")}: ${response.user.studentCode}`);
-      navigate(response.redirectTo || "/dashboard", true);
+
+      // Dashboard ga o'tish
+      navigate("/dashboard", true);
     } catch (error) {
       showToast(error.message, "error");
     }
@@ -1215,17 +1225,25 @@ function attachRegisterForm() {
 function attachLoginForm() {
   const form = document.getElementById("login-form");
   if (!form) return;
+  
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = new FormData(form);
+    
     try {
       const response = await api("/api/auth/login", {
         method: "POST",
         body: Object.fromEntries(data.entries()),
       });
-      await loadContext();
+      
+      // MUHIM: User ma'lumotini localStorage ga saqlash
+      if (response.user) {
+        localStorage.setItem('zukko_user', JSON.stringify(response.user));
+        localStorage.setItem('zukko_student_code', response.user.studentCode);
+      }
+
       showToast(t("login_ok"));
-      navigate(response.redirectTo || "/dashboard", true);
+      navigate("/dashboard", true);
     } catch (error) {
       showToast(error.message, "error");
     }
